@@ -115,4 +115,12 @@ dd("Off. role",["Creators","Ball Handlers","Shooters","Finishers / Slashers","Bi
 draw();
 })();
 </script>
-<!-- end SkillCurve embed --></body></html>
+<!-- end SkillCurve embed --><script>
+(function(){function h(){var el=document.body.firstElementChild;
+ return el?Math.ceil(el.getBoundingClientRect().bottom+ (parseFloat(getComputedStyle(el).marginBottom)||0))+8:document.body.scrollHeight}
+function send(){parent.postMessage({sc:"chart-resize",h:h()},"*")}
+window.addEventListener("load",send);window.addEventListener("resize",send);
+if(document.fonts&&document.fonts.ready)document.fonts.ready.then(send);
+var n=0,t=setInterval(function(){send();if(++n>8)clearInterval(t)},500);
+})();
+</script></body></html>

@@ -119,7 +119,8 @@ body>div{margin:0 !important}</style>
 <text x="174.0" y="549" font-size="11.5" fill="#071523" font-weight="700" font-family="Inter,sans-serif">18% <tspan fill="#5F6B77" font-weight="400" font-size="10.0">(2/11)</tspan></text></g></svg></div>
 <div class="sc-note">Second-chance rate (an 800+ minute season in year 5 or later) among first-stint underperformers, grouped by their year-4 position and role listings. Hover any bar for counts, redemptions (total and cheap-flier), and the group's median year-4 xRAPM — severity varies sharply by role (creators fail mildly at −0.75; anchor bigs fail deep at −2.70), so rate differences partly reflect how badly each archetype tends to miss, not only the market's taste.</div>
 </div><script>
-(function(){function h(){return Math.max(document.body.scrollHeight,document.documentElement.scrollHeight)}
+(function(){function h(){var el=document.body.firstElementChild;
+ return el?Math.ceil(el.getBoundingClientRect().bottom+ (parseFloat(getComputedStyle(el).marginBottom)||0))+8:document.body.scrollHeight}
 function send(){parent.postMessage({sc:"chart-resize",h:h()},"*")}
 window.addEventListener("load",send);window.addEventListener("resize",send);
 if(document.fonts&&document.fonts.ready)document.fonts.ready.then(send);

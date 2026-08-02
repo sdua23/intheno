@@ -46,7 +46,8 @@ body>div{margin:0 !important}</style>
 <td class="sc-m sc-b"><div class="sc-cell"><div class="sc-bar" style="width:4.094117647058823px;background:#071523"></div><span>6% <span class="sc-n">(11/173)</span></span></div></td></tr></tbody></table></div>
 <div class="sc-note">Drafted classes 2014–2021, career clock from draft year (never-played draftees count); undrafted entrants 2015–2022, entry age ≤ 24 — their "ever played" is 100% by construction and shown as —. ¹ Any 800+ minute season in career year 5 or later; career years count from draft year (drafted) or first NBA season (undrafted), regardless of contract structure. ² A season with zero NBA minutes during career years 2–5, after having played. ³ Denominator is players who fell out.</div>
 </div><script>
-(function(){function h(){return Math.max(document.body.scrollHeight,document.documentElement.scrollHeight)}
+(function(){function h(){var el=document.body.firstElementChild;
+ return el?Math.ceil(el.getBoundingClientRect().bottom+ (parseFloat(getComputedStyle(el).marginBottom)||0))+8:document.body.scrollHeight}
 function send(){parent.postMessage({sc:"chart-resize",h:h()},"*")}
 window.addEventListener("load",send);window.addEventListener("resize",send);
 if(document.fonts&&document.fonts.ready)document.fonts.ready.then(send);

@@ -57,7 +57,8 @@ body>div{margin:0 !important}</style>
 <td class="sc-m" style="font-weight:700;color:var(--ink)">+2.60</td></tr></tbody></table></div>
 <div class="sc-note">Every cheap-flier redemption under xRAPM, 2015–2022 entrants · ◆ sustained (2+ seasons ≥ +1) · no cheap flier has ever reached star level (+3) · sorted newest first.</div>
 </div><script>
-(function(){function h(){return Math.max(document.body.scrollHeight,document.documentElement.scrollHeight)}
+(function(){function h(){var el=document.body.firstElementChild;
+ return el?Math.ceil(el.getBoundingClientRect().bottom+ (parseFloat(getComputedStyle(el).marginBottom)||0))+8:document.body.scrollHeight}
 function send(){parent.postMessage({sc:"chart-resize",h:h()},"*")}
 window.addEventListener("load",send);window.addEventListener("resize",send);
 if(document.fonts&&document.fonts.ready)document.fonts.ready.then(send);

@@ -35,7 +35,8 @@ body>div{margin:0 !important}</style>
 <rect x="532.1" y="250" width="90.89999999999999" height="20" fill="#A65A45" rx="0"/></g><text x="577.5500000000001" y="264" text-anchor="middle" font-size="10.5" fill="#F4F0E8" font-weight="700" font-family="Inter,sans-serif">18% (3)</text><text x="633" y="264" font-size="10.5" fill="#5F6B77" font-family="Inter,sans-serif">n=17</text><rect x="118" y="302" width="11" height="11" fill="#071523" rx="2"/><text x="135" y="312" font-size="10.5" fill="#5F6B77" font-family="Inter,sans-serif">got a real second chance (800+ min season, yr 5+)</text><rect x="424" y="302" width="11" height="11" fill="#B88A2A" rx="2"/><text x="441" y="312" font-size="10.5" fill="#5F6B77" font-family="Inter,sans-serif">lingered / pending</text><rect x="584" y="302" width="11" height="11" fill="#A65A45" rx="2"/><text x="601" y="312" font-size="10.5" fill="#5F6B77" font-family="Inter,sans-serif">out of the league</text></svg></div>
 <div class="sc-note">Underperformer = negative xRAPM in a 400+ minute year-4 season; the below-replacement subset (&lt; −2) is discussed in the article. Hover segments for exact shares, counts, and pool quality (median yr-4 xRAPM) — the undrafted pool is less deeply negative (−1.4) than the second-round pool (−2.1), a survivorship artifact discussed in the article.</div>
 </div><script>
-(function(){function h(){return Math.max(document.body.scrollHeight,document.documentElement.scrollHeight)}
+(function(){function h(){var el=document.body.firstElementChild;
+ return el?Math.ceil(el.getBoundingClientRect().bottom+ (parseFloat(getComputedStyle(el).marginBottom)||0))+8:document.body.scrollHeight}
 function send(){parent.postMessage({sc:"chart-resize",h:h()},"*")}
 window.addEventListener("load",send);window.addEventListener("resize",send);
 if(document.fonts&&document.fonts.ready)document.fonts.ready.then(send);
