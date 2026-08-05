@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Which center would you pay more?</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cardo:ital,wght@0,400;0,700;1,400&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#F4F0E8; --card:#FBFAF6; --ink:#071523; --body:#16232E; --meta:#5F6B77;
+    --gold:#B88A2A; --hair:#DCD5C6; --terra:#A65A45; --slate:#3E5C76;
+  }
+  *{box-sizing:border-box; margin:0; padding:0}
+  body{background:var(--paper); font-family:'Inter',sans-serif; color:var(--body);}
+  .wrap{max-width:640px; margin:0 auto; padding:8px 14px 20px;}
+  h2{font-family:'Cardo',serif; font-size:1.55rem; color:var(--ink); line-height:1.2;}
+  .sub{color:var(--meta); font-size:.9rem; margin-top:4px;}
+  .quiz{background:var(--card); border:1px solid var(--hair); border-radius:10px; margin-top:14px; overflow:hidden;}
+  table{width:100%; border-collapse:collapse; font-size:.92rem;}
+  th,td{padding:9px 12px; text-align:center;}
+  td:first-child,th:first-child{text-align:left; color:var(--meta); font-size:.84rem;}
+  thead th{font-family:'Cardo',serif; font-size:1.05rem; color:var(--ink); border-bottom:1px solid var(--hair); padding-top:12px;}
+  tbody tr:nth-child(even){background:rgba(220,213,198,.22);}
+  td.num{font-variant-numeric:tabular-nums; color:var(--ink); font-weight:500;}
+  .prompt{text-align:center; font-style:italic; color:var(--meta); font-size:.9rem; margin:14px 0 10px; font-family:'Cardo',serif;}
+  .btnrow{text-align:center;}
+  button#reveal{font-family:'Inter',sans-serif; font-weight:600; font-size:.9rem; letter-spacing:.02em;
+    background:var(--ink); color:var(--paper); border:none; border-radius:6px; padding:10px 22px; cursor:pointer;}
+  button#reveal:hover{background:var(--slate);}
+  /* reveal */
+  #answer{display:none; margin-top:16px;}
+  .cards{display:flex; gap:12px;}
+  .pcard{flex:1; background:var(--card); border:1px solid var(--hair); border-radius:10px; padding:14px 12px; text-align:center;}
+  .pcard.podium{border-top:3px solid var(--gold);}
+  .pcard.other{border-top:3px solid var(--slate);}
+  .pname{font-family:'Cardo',serif; font-weight:700; font-size:1.12rem; color:var(--ink);}
+  .ppick{font-size:.78rem; letter-spacing:.06em; text-transform:uppercase; color:var(--meta); margin-top:3px;}
+  .ppick b{color:var(--terra); font-weight:700;}
+  .pmini{font-family:'Cardo',serif; font-size:1.15rem; font-weight:700; color:var(--slate); margin-top:2px;}
+  .plab{font-size:.72rem; letter-spacing:.06em; text-transform:uppercase; color:var(--meta); margin-top:12px;}
+  .pval{font-family:'Cardo',serif; font-size:1.7rem; font-weight:700; color:var(--ink); margin-top:2px;}
+  .pdol{font-size:.8rem; color:var(--meta);}
+  .kicker{text-align:center; font-family:'Cardo',serif; font-style:italic; font-size:1.02rem; color:var(--ink); margin-top:14px;}
+  @media(max-width:480px){ .cards{flex-direction:column} h2{font-size:1.3rem} }
+</style>
+</head>
+<body>
+<div class="wrap" id="root">
+  <h2>Which center would you pay more?</h2>
+  <div class="sub">Two big men through their rookie contracts &mdash; without knowing where they were drafted.</div>
+
+  <div class="quiz">
+    <table>
+      <thead>
+        <tr><th></th><th>Center A</th><th>Center B</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Minutes (Yrs 1&ndash;4)</td><td class="num">7,247</td><td class="num">9,117</td></tr>
+        <tr><td>True Shooting</td><td class="num">.623</td><td class="num">.651</td></tr>
+        <tr><td>Per 75 possessions</td><td class="num">19.2 pts &middot; 12.4 reb &middot; 1.2 blk</td><td class="num">15.1 pts &middot; 11.7 reb &middot; 2.0 blk</td></tr>
+        <tr><td>BPM (Yrs 1&ndash;4)</td><td class="num">+1.14</td><td class="num">+1.16</td></tr>
+        <tr><td>xRAPM (Yrs 1&ndash;4)</td><td class="num">+0.4</td><td class="num">+0.1</td></tr>
+        <tr><td>Contract Year xRAPM (Year 4)</td><td class="num">+0.50</td><td class="num">+0.70</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="prompt">Take a guess before you reveal.</div>
+  <div class="btnrow"><button id="reveal">Reveal the players</button></div>
+
+  <div id="answer">
+    <div class="cards">
+      <div class="pcard podium">
+        <div class="pname">Deandre Ayton</div>
+        <div class="ppick">Pick <b>1</b> &middot; 2018</div>
+        <div class="plab">Blind model valuation</div>
+        <div class="pmini">17.6% of cap</div>
+        <div class="plab">Actual second contract</div>
+        <div class="pval">25.0% of cap</div>
+        <div class="pdol">$30.9M in year one &mdash; the maximum</div>
+      </div>
+      <div class="pcard other">
+        <div class="pname">Jarrett Allen</div>
+        <div class="ppick">Pick <b>22</b> &middot; 2017</div>
+        <div class="plab">Blind model valuation</div>
+        <div class="pmini">16.7% of cap</div>
+        <div class="plab">Actual second contract</div>
+        <div class="pval">17.8% of cap</div>
+        <div class="pdol">$20.0M flat per year</div>
+      </div>
+    </div>
+    <div class="kicker">The model valued them almost identically. The market didn&rsquo;t.</div>
+  </div>
+</div>
+
+<script>
+  function postH(){
+    var h = document.getElementById('root').getBoundingClientRect().bottom + 24;
+    parent.postMessage({sentinel:'sc-chart', type:'resize', height: Math.ceil(h), id:'blind_test'}, '*');
+  }
+  document.getElementById('reveal').addEventListener('click', function(){
+    document.getElementById('answer').style.display='block';
+    this.parentNode.style.display='none';
+    document.querySelector('.prompt').style.display='none';
+    postH();
+  });
+  window.addEventListener('load', postH);
+  window.addEventListener('resize', postH);
+</script>
+</body>
+</html>
