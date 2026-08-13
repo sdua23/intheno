@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Schedule Fatigue — In The N.O.</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cardo:wght@400;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--paper:#F4F0E8;--ink:#071523;--body:#16232E;--meta:#5F6B77;
+ --gold:#B88A2A;--hair:#DCD5C6;--card:#FBFAF6}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--paper);color:var(--body);font-family:"Inter",system-ui,sans-serif;
+ -webkit-font-smoothing:antialiased;padding:4px}
+.hd{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;flex-wrap:wrap}
+h1{font-family:"Cardo",Georgia,serif;font-weight:700;font-size:clamp(24px,4vw,32px);
+ color:var(--ink);line-height:1.1;letter-spacing:-.01em}
+.sub{font-size:13.5px;color:var(--meta);margin-top:5px}
+.pick{display:flex;align-items:center;gap:9px}
+label{font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--meta);font-weight:600}
+select{font-family:inherit;font-size:14px;font-weight:500;color:var(--ink);background:var(--card);
+ border:1px solid var(--hair);border-radius:0;padding:9px 12px;cursor:pointer;min-width:210px}
+select:focus-visible{outline:2px solid var(--gold);outline-offset:1px}
+.hair{height:1px;background:var(--gold);margin:15px 0 0}
+
+.summary{background:var(--card);border:1px solid var(--hair);border-top:none;
+ padding:17px 19px;font-size:15px;line-height:1.55}
+.summary b{color:var(--ink);font-weight:600}
+.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:13px;margin-top:13px}
+.m{background:var(--card);border:1px solid var(--hair);padding:17px 19px 15px}
+.m h2{font-family:"Inter",sans-serif;font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;
+ color:var(--meta);font-weight:600}
+.big{display:flex;align-items:baseline;gap:9px;margin:9px 0 3px}
+.v{font-family:"Cardo",Georgia,serif;font-weight:700;font-size:37px;color:var(--ink);line-height:1}
+.rk{font-size:12.5px;color:var(--meta);font-weight:500}
+.rk.hard{color:var(--gold);font-weight:600}
+.strip{position:relative;margin-top:11px}
+.strip .b{position:absolute;bottom:8px;left:0;right:0;height:1px;background:var(--hair)}
+.strip .ref{position:absolute;top:2px;bottom:8px;width:1px;background:var(--hair)}
+.d{position:absolute;bottom:5px;width:6px;height:6px;border-radius:50%;background:var(--meta);
+ opacity:.42;margin-left:-3px}
+.d.me{background:var(--gold);opacity:1;width:11px;height:11px;bottom:2.5px;margin-left:-5.5px}
+.ax{display:flex;justify-content:space-between;font-size:10.5px;color:var(--meta);
+ letter-spacing:.05em;text-transform:uppercase;margin-top:1px}
+.note{font-size:12.5px;color:var(--meta);margin-top:10px;line-height:1.45;
+ border-top:1px solid var(--hair);padding-top:9px}
+h3{font-family:"Cardo",Georgia,serif;font-weight:700;font-size:20px;color:var(--ink);
+ margin:22px 0 3px}
+.hint{font-size:12.5px;color:var(--meta);margin-bottom:10px}
+.tw{overflow-x:auto;border:1px solid var(--hair);background:var(--card);
+ -webkit-overflow-scrolling:touch}
+table{border-collapse:collapse;width:100%;font-size:12.5px;font-variant-numeric:tabular-nums;
+ white-space:nowrap}
+th{background:var(--ink);color:var(--paper);font-weight:500;text-align:right;padding:10px 9px;
+ letter-spacing:.05em;font-size:10px;text-transform:uppercase;cursor:pointer;user-select:none;
+ position:sticky;top:0}
+th:first-child{text-align:left}
+th:hover,th:focus-visible{color:var(--gold);outline:none}
+th .ar{opacity:.55;font-size:9px;margin-left:3px}
+td{padding:7px 9px;text-align:right;border-bottom:1px solid var(--hair);color:var(--body)}
+td:first-child{text-align:left;color:var(--ink);font-weight:500;letter-spacing:.04em}
+tbody tr{cursor:pointer}
+tbody tr:hover td{background:rgba(7,21,35,.045)}
+tr:last-child td{border-bottom:none}
+tr.me td{background:rgba(184,138,42,.13)}
+tr.me:hover td{background:rgba(184,138,42,.18)}
+tr.me td:first-child{color:var(--gold);font-weight:700}
+.neg{color:#8C3A2B}
+.foot{display:flex;justify-content:space-between;gap:14px;flex-wrap:wrap;
+ font-size:11.5px;color:var(--meta);margin-top:14px;letter-spacing:.03em}
+@media(max-width:620px){.grid{grid-template-columns:1fr}
+ .hd{align-items:flex-start}select{min-width:0;width:100%}.pick{width:100%;flex-direction:column;align-items:flex-start;gap:5px}}
+@media(prefers-reduced-motion:reduce){*{transition:none!important}}
+</style></head><body>
+
+<div class="hd">
+  <div><h1>Schedule Analysis</h1>
+  <p class="sub">2026&ndash;27 regular season &middot; each team against the league</p></div>
+  <div class="pick"><label for="t">Team</label><select id="t"></select></div>
+</div>
+<div class="hair"></div>
+<p class="summary" id="sum"></p>
+<div class="grid" id="g"></div>
+
+<h3>Every team</h3>
+<p class="hint">Click a column to sort, or a row to switch teams.</p>
+<div class="tw"><table id="tbl"><thead><tr id="th"></tr></thead><tbody id="tb"></tbody></table></div>
+<div class="foot"><span id="ft"></span><span>In The N.O. &middot; Source: NBA schedule release</span></div>
+
+<script>
+const D = [{"team": "ATL", "name": "Atlanta Hawks", "b2b": 14, "3in4": 21, "3in4_no_tail": 11, "rest_adv": 10, "rest_dis": 12, "net": -2, "crossings": 19, "hours_shifted": 24, "crossings_on_b2b": 3}, {"team": "BOS", "name": "Boston Celtics", "b2b": 16, "3in4": 22, "3in4_no_tail": 12, "rest_adv": 10, "rest_dis": 14, "net": -4, "crossings": 23, "hours_shifted": 28, "crossings_on_b2b": 3}, {"team": "BKN", "name": "Brooklyn Nets", "b2b": 16, "3in4": 21, "3in4_no_tail": 11, "rest_adv": 15, "rest_dis": 14, "net": 1, "crossings": 18, "hours_shifted": 23, "crossings_on_b2b": 3}, {"team": "CHA", "name": "Charlotte Hornets", "b2b": 13, "3in4": 21, "3in4_no_tail": 12, "rest_adv": 15, "rest_dis": 10, "net": 5, "crossings": 22, "hours_shifted": 27, "crossings_on_b2b": 5}, {"team": "CHI", "name": "Chicago Bulls", "b2b": 15, "3in4": 24, "3in4_no_tail": 12, "rest_adv": 8, "rest_dis": 11, "net": -3, "crossings": 35, "hours_shifted": 37, "crossings_on_b2b": 5}, {"team": "CLE", "name": "Cleveland Cavaliers", "b2b": 16, "3in4": 23, "3in4_no_tail": 12, "rest_adv": 10, "rest_dis": 12, "net": -2, "crossings": 23, "hours_shifted": 29, "crossings_on_b2b": 2}, {"team": "DAL", "name": "Dallas Mavericks", "b2b": 16, "3in4": 21, "3in4_no_tail": 12, "rest_adv": 11, "rest_dis": 14, "net": -3, "crossings": 31, "hours_shifted": 40, "crossings_on_b2b": 4}, {"team": "DEN", "name": "Denver Nuggets", "b2b": 14, "3in4": 21, "3in4_no_tail": 11, "rest_adv": 11, "rest_dis": 12, "net": -1, "crossings": 39, "hours_shifted": 50, "crossings_on_b2b": 7}, {"team": "DET", "name": "Detroit Pistons", "b2b": 15, "3in4": 21, "3in4_no_tail": 10, "rest_adv": 11, "rest_dis": 9, "net": 2, "crossings": 29, "hours_shifted": 35, "crossings_on_b2b": 6}, {"team": "GSW", "name": "Golden State Warriors", "b2b": 15, "3in4": 23, "3in4_no_tail": 12, "rest_adv": 12, "rest_dis": 12, "net": 0, "crossings": 28, "hours_shifted": 49, "crossings_on_b2b": 3}, {"team": "HOU", "name": "Houston Rockets", "b2b": 14, "3in4": 24, "3in4_no_tail": 12, "rest_adv": 10, "rest_dis": 11, "net": -1, "crossings": 28, "hours_shifted": 36, "crossings_on_b2b": 1}, {"team": "IND", "name": "Indiana Pacers", "b2b": 15, "3in4": 20, "3in4_no_tail": 10, "rest_adv": 9, "rest_dis": 12, "net": -3, "crossings": 24, "hours_shifted": 31, "crossings_on_b2b": 4}, {"team": "LAC", "name": "LA Clippers", "b2b": 13, "3in4": 20, "3in4_no_tail": 10, "rest_adv": 13, "rest_dis": 8, "net": 5, "crossings": 30, "hours_shifted": 53, "crossings_on_b2b": 1}, {"team": "LAL", "name": "Los Angeles Lakers", "b2b": 15, "3in4": 26, "3in4_no_tail": 12, "rest_adv": 11, "rest_dis": 11, "net": 0, "crossings": 25, "hours_shifted": 40, "crossings_on_b2b": 2}, {"team": "MEM", "name": "Memphis Grizzlies", "b2b": 13, "3in4": 19, "3in4_no_tail": 8, "rest_adv": 7, "rest_dis": 7, "net": 0, "crossings": 36, "hours_shifted": 44, "crossings_on_b2b": 3}, {"team": "MIA", "name": "Miami Heat", "b2b": 13, "3in4": 19, "3in4_no_tail": 8, "rest_adv": 14, "rest_dis": 11, "net": 3, "crossings": 18, "hours_shifted": 24, "crossings_on_b2b": 1}, {"team": "MIL", "name": "Milwaukee Bucks", "b2b": 14, "3in4": 22, "3in4_no_tail": 11, "rest_adv": 15, "rest_dis": 11, "net": 4, "crossings": 37, "hours_shifted": 40, "crossings_on_b2b": 8}, {"team": "MIN", "name": "Minnesota Timberwolves", "b2b": 13, "3in4": 22, "3in4_no_tail": 10, "rest_adv": 5, "rest_dis": 7, "net": -2, "crossings": 29, "hours_shifted": 35, "crossings_on_b2b": 6}, {"team": "NOP", "name": "New Orleans Pelicans", "b2b": 16, "3in4": 27, "3in4_no_tail": 13, "rest_adv": 8, "rest_dis": 13, "net": -5, "crossings": 28, "hours_shifted": 46, "crossings_on_b2b": 2}, {"team": "NYK", "name": "New York Knicks", "b2b": 13, "3in4": 17, "3in4_no_tail": 8, "rest_adv": 9, "rest_dis": 11, "net": -2, "crossings": 20, "hours_shifted": 27, "crossings_on_b2b": 2}, {"team": "OKC", "name": "Oklahoma City Thunder", "b2b": 13, "3in4": 18, "3in4_no_tail": 9, "rest_adv": 7, "rest_dis": 7, "net": 0, "crossings": 27, "hours_shifted": 35, "crossings_on_b2b": 0}, {"team": "ORL", "name": "Orlando Magic", "b2b": 14, "3in4": 18, "3in4_no_tail": 9, "rest_adv": 10, "rest_dis": 12, "net": -2, "crossings": 23, "hours_shifted": 28, "crossings_on_b2b": 3}, {"team": "PHI", "name": "Philadelphia 76ers", "b2b": 13, "3in4": 16, "3in4_no_tail": 6, "rest_adv": 10, "rest_dis": 11, "net": -1, "crossings": 22, "hours_shifted": 27, "crossings_on_b2b": 4}, {"team": "PHX", "name": "Phoenix Suns", "b2b": 13, "3in4": 22, "3in4_no_tail": 11, "rest_adv": 11, "rest_dis": 11, "net": 0, "crossings": 32, "hours_shifted": 44, "crossings_on_b2b": 2}, {"team": "POR", "name": "Portland Trail Blazers", "b2b": 15, "3in4": 19, "3in4_no_tail": 11, "rest_adv": 12, "rest_dis": 9, "net": 3, "crossings": 23, "hours_shifted": 40, "crossings_on_b2b": 0}, {"team": "SAC", "name": "Sacramento Kings", "b2b": 14, "3in4": 25, "3in4_no_tail": 12, "rest_adv": 14, "rest_dis": 11, "net": 3, "crossings": 30, "hours_shifted": 53, "crossings_on_b2b": 3}, {"team": "SAS", "name": "San Antonio Spurs", "b2b": 13, "3in4": 18, "3in4_no_tail": 8, "rest_adv": 12, "rest_dis": 9, "net": 3, "crossings": 29, "hours_shifted": 46, "crossings_on_b2b": 1}, {"team": "TOR", "name": "Toronto Raptors", "b2b": 15, "3in4": 22, "3in4_no_tail": 9, "rest_adv": 11, "rest_dis": 13, "net": -2, "crossings": 19, "hours_shifted": 26, "crossings_on_b2b": 2}, {"team": "UTA", "name": "Utah Jazz", "b2b": 13, "3in4": 20, "3in4_no_tail": 10, "rest_adv": 9, "rest_dis": 8, "net": 1, "crossings": 35, "hours_shifted": 43, "crossings_on_b2b": 4}, {"team": "WAS", "name": "Washington Wizards", "b2b": 14, "3in4": 16, "3in4_no_tail": 7, "rest_adv": 14, "rest_dis": 11, "net": 3, "crossings": 21, "hours_shifted": 26, "crossings_on_b2b": 4}];
+const M = [
+ {k:'b2b', t:'Back-to-backs', hard:'high',
+  note:'Two games on consecutive nights.'},
+ {k:'3in4', t:'Three in four nights', hard:'high',
+  note:'Third game inside a four-day window. Includes sets ending in a back-to-back.'},
+ {k:'net', t:'Net rest', hard:'low', ref:0,
+  note:'Games rested against a tired opponent, minus the reverse.'},
+ {k:'crossings_on_b2b', t:'Zone crossings on no rest', hard:'high',
+  note:'Time zone changes landing on the second night of a back-to-back.'}
+];
+
+const sel = document.getElementById('t');
+D.forEach(d => sel.insertAdjacentHTML('beforeend',
+  `<option value="${d.team}"${d.team==='NOP'?' selected':''}>${d.name}</option>`));
+
+function rank(m, team){                       // 1 = hardest
+  const s = [...D].sort((a,b) => m.hard==='high' ? b[m.k]-a[m.k] : a[m.k]-b[m.k]);
+  const v = D.find(d=>d.team===team)[m.k];
+  return {r: s.findIndex(d=>d[m.k]===v)+1, n: s.filter(d=>d[m.k]===v).length};
+}
+const sign = v => String(v).replace('-','\u2212');
+const ord = n => n+({1:'st',2:'nd',3:'rd'}[n%10>3||(n>10&&n<14)?0:n%10]||'th');
+
+function draw(team){
+  const me = D.find(d=>d.team===team);
+
+  document.getElementById('g').innerHTML = M.map(m=>{
+    const vals = D.map(d=>d[m.k]);
+    const lo0 = Math.min(...vals), hi0 = Math.max(...vals);
+    const pad = (hi0-lo0)*0.08 || 1, lo = lo0-pad, hi = hi0+pad;
+    const at = v => (v-lo)/(hi-lo)*100;
+    const refV = 'ref' in m ? m.ref : vals.reduce((a,b)=>a+b,0)/vals.length;
+    const {r,n} = rank(m, team);
+    const tied = n>1 ? ` (tied, ${n})` : '';
+    const harsh = r <= 5;
+
+    // stack ties so every team stays visible
+    const counts = {};
+    vals.forEach(v => { const x=+at(v).toFixed(3); counts[x]=(counts[x]||0)+1; });
+    const tall = Math.max(...Object.values(counts));
+    const stripH = Math.max(30, 13 + tall * 6.5);
+    const seen = {};
+    const dots = [...D].sort((a,b)=>(a.team===team)-(b.team===team)).map(d=>{
+      const x = +at(d[m.k]).toFixed(3);
+      const lvl = seen[x]||0; seen[x] = lvl+1;
+      const me_ = d.team===team;
+      return `<span class="d${me_?' me':''}" style="left:${x}%;bottom:${5+lvl*6.5-(me_?2.5:0)}px"></span>`;
+    }).join('');
+
+    return `<div class="m"><h2>${m.t}</h2>
+      <div class="big"><span class="v">${sign(me[m.k])}</span>
+        <span class="rk${harsh?' hard':''}">${ord(r)} hardest${tied}</span></div>
+      <div class="strip" style="height:${stripH}px"><span class="b"></span>
+        <span class="ref" style="left:${at(refV)}%"></span>${dots}</div>
+      <div class="ax"><span>${sign(lo0)} ${m.hard==='high'?'easiest':'hardest'}</span>
+        <span>${'ref' in m ? 'even' : 'avg ' + Math.round(refV*10)/10}</span>
+        <span>${sign(hi0)} ${m.hard==='high'?'hardest':'easiest'}</span></div>
+      <p class="note">${m.note}</p></div>`;
+  }).join('');
+
+  const worst = M.map(m=>({m, ...rank(m,team)})).filter(x=>x.r<=5).length;
+  const lede = worst>=3 ? 'sits in the hardest five on ' + worst + ' of the four measures'
+             : worst>0 ? 'lands in the hardest five on ' + worst + ' of the four'
+             : 'avoids the hardest five on every measure';
+  document.getElementById('sum').innerHTML =
+    `<b>${me.name}</b> ${lede}. ${me.b2b} back-to-backs, ${me['3in4']} three-in-four sets, `
+    + `net rest of ${me.net===0?'even':me.net<0?'\u2212'+Math.abs(me.net):'+'+me.net}, and `
+    + `${me.crossings} time zone crossings totalling ${me.hours_shifted} hours.`;
+
+  table(team);
+
+  document.getElementById('ft').textContent =
+    'Based on the 80 assigned games per team \u2014 two NBA Cup games in December are unscheduled.';
+  post();
+}
+
+const COLS = [
+ {k:'team',             t:'Team'},
+ {k:'b2b',              t:'B2B'},
+ {k:'3in4',             t:'3-in-4'},
+ {k:'3in4_no_tail',     t:'3-in-4 excl.'},
+ {k:'rest_adv',         t:'Rest adv'},
+ {k:'rest_dis',         t:'Rest dis'},
+ {k:'net',              t:'Net'},
+ {k:'crossings',        t:'TZ cross'},
+ {k:'hours_shifted',    t:'Hours'},
+ {k:'crossings_on_b2b', t:'TZ on B2B'}
+];
+let sortK = 'b2b', asc = false;
+
+function table(team){
+  document.getElementById('th').innerHTML = COLS.map(c =>
+    `<th data-k="${c.k}" tabindex="0" title="Sort by ${c.t}">${c.t}` +
+    (sortK===c.k ? `<span class="ar">${asc?'\u25B2':'\u25BC'}</span>` : '') + `</th>`).join('');
+
+  const rows = [...D].sort((a,b) => sortK==='team'
+    ? (asc?1:-1) * a.team.localeCompare(b.team)
+    : (asc?1:-1) * (a[sortK]-b[sortK]));
+
+  document.getElementById('tb').innerHTML = rows.map(d =>
+    `<tr class="${d.team===team?'me':''}" data-t="${d.team}" title="${d.name}">` +
+    COLS.map(c => c.k==='team'
+      ? `<td>${d.team}</td>`
+      : `<td class="${c.k==='net'&&d[c.k]<0?'neg':''}">${sign(d[c.k])}</td>`).join('') +
+    `</tr>`).join('');
+
+  document.querySelectorAll('#th th').forEach(th => {
+    const go = () => { const k = th.dataset.k;
+      asc = (sortK===k) ? !asc : (k==='team');
+      sortK = k; table(sel.value); post(); };
+    th.addEventListener('click', go);
+    th.addEventListener('keydown', e => { if(e.key==='Enter'||e.key===' '){ e.preventDefault(); go(); } });
+  });
+  document.querySelectorAll('#tb tr').forEach(tr =>
+    tr.addEventListener('click', () => { sel.value = tr.dataset.t; draw(tr.dataset.t); }));
+}
+
+function post(){                              // let the Ghost iframe resize itself
+  const h = document.documentElement.scrollHeight;
+  if (window.parent !== window) parent.postMessage({inoHeight:h}, '*');
+}
+sel.addEventListener('change', e => draw(e.target.value));
+window.addEventListener('resize', post);
+draw('NOP');
+</script>
+</body></html>
