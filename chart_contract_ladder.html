@@ -141,8 +141,14 @@ function render(){setTimeout(()=>window.__scSend&&window.__scSend(),0);
  $('thNow').textContent=`In ${sn(LASTREAL)} $`;
  $('compBody').innerHTML=near.map(({r})=>{const c=r[3]<grade?'lo':r[3]>grade?'hi':'';return`<tr><td>${r[0]}</td><td>${sn(r[1])}</td><td class="n">${r[2].toFixed(1)}%</td><td class="n hide-sm">${fmt(r[2]/100*CAP[nowYear])}</td><td><span class="tag ${c}">${TIERS[r[3]]}</span></td></tr>`}).join('')||'<tr><td colspan="5">No salaries match these filters. Widen the season range or age.</td></tr>';
 }
-function famous(R,t,s){ // two well-known names near the tier median
- return R.filter(r=>r[3]===t&&r[2]>=s.p25&&r[2]<=s.p75).sort((a,b)=>b[5]-a[5]).filter((r,i,a)=>a.findIndex(x=>x[0]===r[0])===i).slice(0,2).map(r=>`${r[0]} ${sn(r[1]).slice(2)}`);
+function famous(R,t,s){ // one historical and one recent name inside the band's middle 50%
+ const inb=R.filter(r=>r[3]===t&&r[2]>=s.p25&&r[2]<=s.p75).sort((a,b)=>b[5]-a[5]);
+ if(!inb.length)return[];
+ let rec=null;
+ for(let y=2026;y>=2015&&!rec;y--)rec=inb.find(r=>r[1]===y)||null;
+ const hist=inb.find(r=>rec&&r[0]!==rec[0]&&r[1]<rec[1])||inb.find(r=>!rec||r[0]!==rec[0]);
+ const pick=[hist,rec].filter(Boolean).filter((r,i,a)=>a.indexOf(r)===i);
+ return pick.map(r=>`${r[0]} ${sn(r[1]).slice(2)}`);
 }
 function drawLadder(st,R,p,grade,spend,stAll){
  const W=Math.max(560,Math.min(820,$('ladder').parentElement.clientWidth)),L=10,Rm=14,top=26,rowH=58,H=top+rowH*TIERS.length+30;
