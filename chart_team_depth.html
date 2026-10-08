@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Team depth | In The N.O.</title>
+<title>Team Depth | In The N.O.</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cardo:wght@400;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
@@ -59,7 +59,13 @@ details{margin-top:20px;font-size:13.5px;color:var(--body)}
 summary{cursor:pointer;color:var(--navy);font-weight:600}
 details p{max-width:76ch;margin:8px 0}
 .src{margin-top:18px;font-size:12px;color:var(--meta);border-top:1px solid var(--hair);padding-top:10px}
-@media (max-width:760px){
+@media (max-width:900px){
+ .grid{grid-template-columns:100px repeat(5,minmax(0,1fr)) 96px}
+ .chip{padding:4px 5px 6px}.chip .n{font-size:11.5px}.chip .n .f{display:none}.chip .n .s{display:inline}
+ .tl{font-size:11.5px}.lg{padding-left:6px}.sq{max-width:86px}.sq i{width:8px;height:8px}
+ .two{gap:14px}.card{padding:16px 14px 12px}
+}
+@media (max-width:600px){
  .picks{width:100%}.picks .pick{flex:1}.picks select{min-width:0!important;width:100%}
  .two{grid-template-columns:1fr}
  .grid{grid-template-columns:44px repeat(5,minmax(0,1fr));gap:2px}
@@ -212,7 +218,7 @@ function render(t){
 }
 const NS="http://www.w3.org/2000/svg";
 function curve(t){
- const W=Math.max(320,Math.min(480,document.getElementById("curve").clientWidth||480)),H=300,m={l:44,r:14,t:14,b:40},iw=W-m.l-m.r,ih=H-m.t-m.b;
+ const W=Math.max(250,Math.min(480,document.getElementById("curve").clientWidth||480)),H=300,m={l:44,r:14,t:14,b:40},iw=W-m.l-m.r,ih=H-m.t-m.b;
  const ymax=Math.ceil(Math.max(...SL[t],...P75,MED[0])/5)*5;
  const x=i=>m.l+i/9*iw,y=v=>m.t+ih-v/ymax*ih;
  let s=`<svg viewBox="0 0 ${W} ${H}" width="100%" role="img" aria-label="${tname(t)} production value by roster slot against the league median"><title>Depth curve</title>`;
@@ -230,7 +236,7 @@ function curve(t){
  document.getElementById("curve").innerHTML=s;
 }
 function scatter(t){
- const W=Math.max(320,Math.min(480,document.getElementById("scatter").clientWidth||480)),H=320,m={l:44,r:14,t:14,b:40},iw=W-m.l-m.r,ih=H-m.t-m.b;
+ const W=Math.max(250,Math.min(480,document.getElementById("scatter").clientWidth||480)),H=320,m={l:44,r:14,t:14,b:40},iw=W-m.l-m.r,ih=H-m.t-m.b;
  const xs=codes.map(c=>TOP[c]),ys=codes.map(c=>BEN[c]);
  const xmax=Math.ceil(Math.max(...xs)/10)*10,ymax=Math.ceil(Math.max(...ys)/5)*5;
  const x=v=>m.l+v/xmax*iw,y=v=>m.t+ih-v/ymax*ih;
