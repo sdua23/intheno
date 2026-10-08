@@ -190,7 +190,7 @@ function notes(cols){
 }
 function render(t){
  cur=t;sel.value=t;ssel.value=season;
- document.getElementById("title").textContent=tname(t)+" depth";
+ document.getElementById("title").textContent=tname(t)+" Depth";
  document.getElementById("basis").textContent=season===2027?`${slabel(season)} roster per Basketball-Reference as of Oct. 8, 2026, including two-way contracts and training camp invites. Graded on the two seasons before it.`:`${slabel(season)} end-of-season roster, graded on what each player did that season.`;
  const roster=byTeam[t];
  const cols=colsOf(t);
