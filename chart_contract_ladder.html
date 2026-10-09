@@ -113,8 +113,9 @@
 
 #sc-ladder .row.lk{cursor:pointer}
 #sc-ladder .row.lk:hover .nm{text-decoration:underline}
-#sc-ladder .tabs{overflow-x:auto}
 #sc-ladder .tabs button{white-space:nowrap}
+@media (max-width:440px){#sc-ladder .tabs{gap:0}#sc-ladder .tabs button{padding:10px 7px;font-size:13px}}
+@media (max-width:340px){#sc-ladder .tabs button{padding:10px 5px;font-size:12px}}
 </style></head><body><div id="sc-ladder">
 <div class="sc-title" id="scTitle">What tier is this contract paying for?</div>
 <p class="dek" id="scDek">Pick the position, grade the player against his positional peers, and enter the deal. The ladder shows what teams have historically paid for each tier at that position. Bands show what teams paid, not what a player is worth.</p>
