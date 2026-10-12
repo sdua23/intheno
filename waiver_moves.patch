@@ -1,0 +1,125 @@
+--- /tmp/psx_orig.py	2026-10-12 14:55:17.028251281 +0000
++++ psx_contracts_v2.py	2026-10-12 14:55:17.090635729 +0000
+@@ -60,6 +60,18 @@
+ TRADE_KEYWORDS = re.compile(r"\btrade\b", re.IGNORECASE)
+ TRADE_COUNTERPARTY_RE = re.compile(r"trade with (.+)", re.IGNORECASE)
+ 
++# ---- roster-exit / waiver-acquisition movements (added for the
++# replacement-level acquisition table). Only waiver-related exits and
++# acquisitions are kept; IL moves, G League assignments, suspensions etc.
++# still fall through and are discarded. Order matters: first match wins.
++MOVE_TYPES = [
++    ("claimed", re.compile(r"\bclaim", re.IGNORECASE)),
++    ("buyout", re.compile(r"\bbuy-?out\b|\bbought out\b", re.IGNORECASE)),
++    ("waived", re.compile(r"\bwaiv", re.IGNORECASE)),
++    ("released", re.compile(r"\breleas", re.IGNORECASE)),
++    ("contract_voided", re.compile(r"\bvoid|\bterminat", re.IGNORECASE)),
++]
++
+ # ---- regex parsing of the Notes free-text field (unchanged from v1,
+ # validated against real prosportstransactions.com output) -------------
+ 
+@@ -148,6 +160,40 @@
+ 
+ 
+ @dataclass
++class MoveRow:
++    date: str
++    team: str
++    player: str
++    direction: str   # "acquired" (claims) or "relinquished" (waived / released / bought out)
++    move_type: str   # claimed / buyout / waived / released / contract_voided
++    raw_notes: str
++
++
++def _clean_cell(cell: str) -> str:
++    cell = str(cell)
++    return "" if cell.strip().lower() in ("", "nan", "none") else cell
++
++
++def move_rows_from_dataframe(df: pd.DataFrame) -> list[MoveRow]:
++    """Waiver claims and roster exits that rows_from_dataframe discards.
++    Kept separate so the contract/trade buckets are byte-for-byte unchanged."""
++    out: list[MoveRow] = []
++    for _, r in df.iterrows():
++        notes = str(r["Notes"])
++        if CONTRACT_KEYWORDS.search(notes) or TRADE_KEYWORDS.search(notes):
++            continue
++        move_type = next((name for name, rx in MOVE_TYPES if rx.search(notes)), None)
++        if move_type is None:
++            continue
++        acquired, relinquished = _clean_cell(r["Acquired"]), _clean_cell(r["Relinquished"])
++        direction = "acquired" if acquired and not relinquished else "relinquished"
++        for player in extract_assets(acquired if direction == "acquired" else relinquished):
++            out.append(MoveRow(date=str(r["Date"]), team=str(r["Team"]), player=player,
++                               direction=direction, move_type=move_type, raw_notes=notes))
++    return out
++
++
++@dataclass
+ class ContractRow:
+     date: str
+     team: str
+@@ -267,6 +313,7 @@
+ ) -> tuple[list[ContractRow], list[TradeRow]]:
+     all_contract_rows: list[ContractRow] = []
+     all_trade_rows: list[TradeRow] = []
++    all_move_rows: list[MoveRow] = []
+     starting_row = 0
+     for page_num in range(max_pages):
+         search = pst.Search(
+@@ -288,6 +335,7 @@
+         contract_rows, trade_rows = rows_from_dataframe(df)
+         all_contract_rows.extend(contract_rows)
+         all_trade_rows.extend(trade_rows)
++        all_move_rows.extend(move_rows_from_dataframe(df))
+ 
+         total_pages = df.attrs.get("pages", 0)
+         print(f"  {team}: row {starting_row} -> {len(contract_rows)} contract, "
+@@ -298,7 +346,7 @@
+             break
+         starting_row += 25
+ 
+-    return all_contract_rows, all_trade_rows
++    return all_contract_rows, all_trade_rows, all_move_rows
+ 
+ 
+ async def main(teams: list[str]):
+@@ -307,12 +355,14 @@
+ 
+     all_contract_rows: list[ContractRow] = []
+     all_trade_rows: list[TradeRow] = []
++    all_move_rows: list[MoveRow] = []
+     for team in teams:
+         print(f"Scraping {team}...", file=sys.stderr)
+         try:
+-            contract_rows, trade_rows = await scrape_team(team, handler)
++            contract_rows, trade_rows, move_rows = await scrape_team(team, handler)
+             all_contract_rows.extend(contract_rows)
+             all_trade_rows.extend(trade_rows)
++            all_move_rows.extend(move_rows)
+         except Exception as e:
+             print(f"  ERROR on {team}: {e!r}", file=sys.stderr)
+ 
+@@ -362,6 +412,21 @@
+         trade_df.to_csv(trades_path, index=False)
+     print(f"Wrote {len(all_trade_rows)} rows to {trades_path}", file=sys.stderr)
+ 
++    # Waiver claims and roster exits (waived / released / bought out).
++    # Same per-team-side shape and targeted-refresh merge as the files above.
++    moves_path = "psx_moves_v2_2014_present.csv"
++    if all_move_rows:
++        move_df = pd.DataFrame([asdict(r) for r in all_move_rows])
++        if set(teams) != set(TEAM_NICKNAMES) and os.path.exists(moves_path):
++            existing_moves = pd.read_csv(moves_path)
++            existing_moves = existing_moves.loc[~existing_moves["team"].isin(teams)]
++            move_df = pd.concat([existing_moves, move_df], ignore_index=True)
++        move_df = move_df.drop_duplicates(
++            subset=["date", "team", "player", "raw_notes"], keep="last"
++        )
++        move_df.to_csv(moves_path, index=False)
++    print(f"Wrote {len(all_move_rows)} rows to {moves_path}", file=sys.stderr)
++
+ 
+ if __name__ == "__main__":
+     parser = argparse.ArgumentParser(description="Scrape NBA transaction history.")
