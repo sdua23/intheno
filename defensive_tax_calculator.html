@@ -209,7 +209,7 @@ function render(){
     <div class="who"><b>${esc(l.name)}</b><span>${l.hyp?'hypothetical defender':esc(`${l.season} · ${l.team} · ${l.pos} · ${l.mins.toLocaleString()} min`)}</span><span>${l.hyp?pctLabel(l.comp)+' league-wide':`${ord(Math.max(1,Math.round(l.pctl)))} pctile that season · ${ord(l.pospctl)} among ${l.pos}s`}</span></div>
     <span class="r">${sg(l.comp)}</span><button data-i="${i}" aria-label="Remove ${esc(l.name)}">\u00d7</button></div>`).join('');
   const out=$('out'),n=lineup.length,k=5-n;
-  if(!n){out.innerHTML=`<p class="sub" style="margin-top:14px">Add a player, a hypothetical defender or a quick start to see the bill.</p>`;return}
+  if(!n){out.innerHTML=`<p class="sub" style="margin-top:14px">Add a player or a hypothetical defender to see what teammates need to provide.</p>`;return}
   const S=lineup.reduce((a,l)=>a+l.comp,0),need=target.v-S;
   let h='';
   if(k===0){
